@@ -5,7 +5,7 @@ import random
 #  вида  a*x + b = c,  где x — целое число
 # ─────────────────────────────────────────
 def generate_equation():
-    a = random.randint(1, 9)          # коэффициент при x (от 1 до 9, не 0)
+    a = random.randint(-9, 9) or 1    # коэффициент при x (от -9 до 9, не 0)
     x = random.randint(-10, 10)       # целое решение, которое мы задаём заранее
     b = random.randint(-20, 20)       # свободный член
 
@@ -19,10 +19,26 @@ def generate_equation():
 # ─────────────────────────────────────────
 def format_equation(a, b, c):
     # Обрабатываем знак b, чтобы уравнение выглядело аккуратно
-    if b >= 0:
-        return f"{a}x + {b} = {c}"
+    # Формируем часть с 'ax'
+    if a == 1:
+        ax_part = "x"
+    elif a == -1:
+        ax_part = "-x"
     else:
-        return f"{a}x - {abs(b)} = {c}"   # вместо "+ -5" пишем "- 5"
+        ax_part = f"{a}x"
+
+    # Формируем часть с 'b'
+    if b > 0:
+        b_part = f"+ {b}"
+    elif b < 0:
+        b_part = f"- {abs(b)}"
+    else:
+        b_part = ""              # если b == 0, не выводим его вовсе
+
+    if b_part:
+        return f"{ax_part} {b_part} = {c}"
+    else:
+        return f"{ax_part} = {c}"
 
 
 # ─────────────────────────────────────────
@@ -83,6 +99,4 @@ def main():
 
 # Запускаем программу
 if __name__ == "__main__":
-    import sys
-    sys.stdout.reconfigure(encoding='utf-8')
     main()
